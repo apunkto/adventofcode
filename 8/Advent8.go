@@ -17,8 +17,6 @@ func main() {
 	start := time.Now()
 
 	a := readFromFile()
-	elapsed := time.Since(start)
-	log.Printf("file load took %s", elapsed)
 
 	for i, l := range a {
 		ll := l
@@ -39,7 +37,7 @@ func main() {
 		}
 		a[i] = ll
 	}
-	elapsed = time.Since(start)
+	elapsed := time.Since(start)
 	log.Printf("Part 2 took %s", elapsed)
 
 }
