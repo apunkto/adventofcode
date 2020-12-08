@@ -8,13 +8,18 @@ import (
 	"regexp"
 	"strconv"
 	"strings"
+	"time"
 )
 
 func main() {
-
+	start := time.Now()
 	a := readFromFile()
+	elapsed := time.Since(start)
+	log.Printf("file load took %s", elapsed)
 
 	for i, l := range a {
+		log.Printf("i %s", time.Since(start))
+
 		if strings.Contains(l, "nop") {
 			l = strings.Replace(l, "nop", "jmp", 1)
 		} else if strings.Contains(l, "jmp") {
@@ -27,15 +32,20 @@ func main() {
 		copy(a2, a)
 		a2[i] = l
 		m := make(map[int]bool)
-		c := countContains(a2, 0, 0, m)
+		c := run(a2, 0, 0, m)
 		if m[len(a)-1] == true {
+			fmt.Printf("i: %d\n", i)
+
 			fmt.Printf("MaAnswerx: %d\n", c)
+			break
 		}
 	}
+	elapsed = time.Since(start)
+	log.Printf("Part 2 took %s", elapsed)
 
 }
 
-func countContains(a []string, c int, i int, m map[int]bool) int {
+func run(a []string, c int, i int, m map[int]bool) int {
 	if i == len(a) {
 		return c
 	}
@@ -48,13 +58,13 @@ func countContains(a []string, c int, i int, m map[int]bool) int {
 	m[i] = true
 	switch f[1] {
 	case "nop":
-		return countContains(a, c, i+1, m)
+		return run(a, c, i+1, m)
 	case "acc":
 		num, _ := strconv.Atoi(f[2])
-		return countContains(a, c+num, i+1, m)
+		return run(a, c+num, i+1, m)
 	case "jmp":
 		num, _ := strconv.Atoi(f[2])
-		return countContains(a, c, i+num, m)
+		return run(a, c, i+num, m)
 	}
 
 	return c
