@@ -21,8 +21,7 @@ func main() {
 	log.Printf("file load took %s", elapsed)
 
 	for i, l := range a {
-		log.Printf("i %s", time.Since(start))
-
+		ll := l
 		if strings.Contains(l, "nop") {
 			l = strings.Replace(l, "nop", "jmp", 1)
 		} else if strings.Contains(l, "jmp") {
@@ -31,15 +30,14 @@ func main() {
 			continue
 		}
 
-		a2 := make([]string, len(a))
-		copy(a2, a)
-		a2[i] = l
+		a[i] = l
 		m := make(map[int]bool)
-		c := run(a2, 0, 0, m)
+		c := run(a, 0, 0, m)
 		if m[len(a)-1] {
 			fmt.Printf("Part 2 asnwer: %d\n", c)
 			break
 		}
+		a[i] = ll
 	}
 	elapsed = time.Since(start)
 	log.Printf("Part 2 took %s", elapsed)
@@ -47,14 +45,11 @@ func main() {
 }
 
 func run(a []string, c int, i int, m map[int]bool) int {
-	if i == len(a) {
+	if i == len(a) || m[i] {
 		return c
 	}
 
 	f := re.FindStringSubmatch(a[i])
-	if m[i] {
-		return c
-	}
 	m[i] = true
 	switch f[1] {
 	case "nop":
