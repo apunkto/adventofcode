@@ -11,8 +11,11 @@ import (
 	"time"
 )
 
+var re = regexp.MustCompile("([a-z]{3})\\s\\+?(-?[0-9]*$)")
+
 func main() {
 	start := time.Now()
+
 	a := readFromFile()
 	elapsed := time.Since(start)
 	log.Printf("file load took %s", elapsed)
@@ -33,10 +36,8 @@ func main() {
 		a2[i] = l
 		m := make(map[int]bool)
 		c := run(a2, 0, 0, m)
-		if m[len(a)-1] == true {
-			fmt.Printf("i: %d\n", i)
-
-			fmt.Printf("MaAnswerx: %d\n", c)
+		if m[len(a)-1] {
+			fmt.Printf("Part 2 asnwer: %d\n", c)
 			break
 		}
 	}
@@ -50,9 +51,8 @@ func run(a []string, c int, i int, m map[int]bool) int {
 		return c
 	}
 
-	re := regexp.MustCompile("([a-z]{3})\\s\\+?(-?[0-9]*$)")
 	f := re.FindStringSubmatch(a[i])
-	if m[i] == true {
+	if m[i] {
 		return c
 	}
 	m[i] = true
