@@ -60,7 +60,7 @@ func run(a []string, c int, i int, m map[int]bool) int {
 		return run(a, c, i+num, m)
 	}
 
-	return c
+	panic("Dont come here!")
 }
 
 func readFromFile() []string {
