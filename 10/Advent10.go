@@ -7,9 +7,12 @@ import (
 	"os"
 	"sort"
 	"strconv"
+	"time"
 )
 
 func main() {
+	start := time.Now()
+
 	a := readFromFile()
 	a = append(a, 0)
 	sort.Ints(a)
@@ -26,6 +29,8 @@ func main() {
 		}
 	}
 	fmt.Print(m[len(a)-1])
+	log.Printf("Part 2 took %s", time.Since(start))
+
 }
 
 func canComeFrom(a int, b int) bool {
