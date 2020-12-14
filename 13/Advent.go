@@ -7,9 +7,11 @@ import (
 	"os"
 	"strconv"
 	"strings"
+	"time"
 )
 
 func main() {
+	start := time.Now()
 
 	a := readFromFile()
 	b := strings.Split(a[1], ",")
@@ -38,6 +40,7 @@ func main() {
 		}
 	}
 	fmt.Println(c)
+	log.Printf("Part 2 took %s", time.Since(start))
 
 }
 
