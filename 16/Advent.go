@@ -16,7 +16,6 @@ var a = readFromFile()
 func main() {
 	m := make(map[string][4]int)
 
-	fmt.Println(re.FindStringSubmatch("class: 1-3 or 5-7"))
 	row := 0
 	for _, l := range a {
 		row++
@@ -28,11 +27,11 @@ func main() {
 
 	ticket := strings.Split(a[row+1], ",")
 
-	validtickets := [][]int{}
+	var validtickets [][]int
 	for _, l := range a[row+4:] {
 		valid := true
 		s := strings.Split(l, ",")
-		tl := []int{}
+		var tl []int
 		for _, ss := range s {
 			x, _ := strconv.Atoi(ss)
 			if !isValidByRules(x, m) {
