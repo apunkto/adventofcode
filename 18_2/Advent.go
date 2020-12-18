@@ -2,79 +2,60 @@ package main
 
 import (
 	"bufio"
+	"fmt"
 	"log"
 	"os"
+	"regexp"
 	"strconv"
 	"strings"
-	"unicode"
 )
 
 var a = readFromFile()
+var re = regexp.MustCompile("\\(([^\\(\\)]+)\\)")
+var re2 = regexp.MustCompile("([0-9]+)(\\+)([0-9]+)")
+var re3 = regexp.MustCompile("([0-9]+)(\\*)([0-9]+)")
 
 func main() {
-	//90135
 	sum := 0
 	for _, v := range a {
 		vv := strings.ReplaceAll(v, " ", "")
 		sum += doMagic(vv)
 	}
-	log.Print(sum)
-
+	fmt.Println(sum)
 }
 
 func doMagic(vv string) int {
-	num := ""
-	op := "+"
-
-	p := 0
-	x := 0
-	y := 0
-	pp := ""
-	for i, s := range vv {
-		ss := string(s)
-
-		if ss == ")" {
-			p--
-			if p == 0 {
-				x = doMath(x, doMagic(pp[1:]), op)
-				pp = ""
-				continue
-			}
-		}
-
-		if ss == "(" {
-			p++
-		}
-
-		if p > 0 {
-			pp = pp + ss
-		} else {
-
-			if unicode.IsDigit(s) {
-				num = num + ss
-				if i == len(vv)-1 {
-					y, _ = strconv.Atoi(num)
-					x = doMath(x, y, op)
-					continue
-				}
-			} else {
-				if num != "" {
-					y, _ = strconv.Atoi(num)
-					x = doMath(x, y, op)
-				}
-				op = ss
-				num = ""
-			}
-		}
+	ss := re.FindStringSubmatch(vv)
+	if ss != nil {
+		sss := strconv.Itoa(doMagic(ss[1]))
+		return doMagic(strings.Replace(vv, ss[0], sss, 1))
 	}
 
-	return x
+	if !strings.Contains(vv, "*") && !strings.Contains(vv, "+") {
+		x, _ := strconv.Atoi(vv)
+		return x
+	}
+
+	ssPlus := re2.FindStringSubmatch(vv)
+	if ssPlus != nil {
+		return doMagic(strings.Replace(vv, ssPlus[0], calc(ssPlus), 1))
+	}
+
+	ssM := re3.FindStringSubmatch(vv)
+	if ssM != nil {
+		return doMagic(strings.Replace(vv, ssM[0], calc(ssM), 1))
+	}
+	panic("dont come here!")
+}
+
+func calc(ssPlus []string) string {
+	x, _ := strconv.Atoi(ssPlus[1])
+	y, _ := strconv.Atoi(ssPlus[3])
+	op := ssPlus[2]
+	return strconv.Itoa(doMath(x, y, op))
 }
 
 func doMath(x int, y int, s string) int {
-	if s == "" {
-		return y
-	}
 	if s == "+" {
 		return x + y
 	}
