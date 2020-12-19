@@ -33,6 +33,27 @@ func main() {
 
 func getRex(s string, rules map[string]string) string {
 	s = strings.TrimSpace(s)
+	switch s {
+	case "8":
+		return "(" + getRex("42", rules) + "+)"
+	case "11":
+		rule42 := getRex("42", rules)
+		rule31 := getRex("31", rules)
+		ss := "("
+		for i := 0; i < 4; i++ {
+			ss = ss + "("
+			for j := 0; j < i+1; j++ {
+				ss = ss + rule42
+			}
+			for j := 0; j < i+1; j++ {
+				ss = ss + rule31
+			}
+			ss = ss + ")|"
+		}
+		ss = ss[:len(ss)-1] + ")"
+		return ss
+	}
+
 	if nRe.MatchString(s) {
 		return getRex(rules[s], rules)
 	}
